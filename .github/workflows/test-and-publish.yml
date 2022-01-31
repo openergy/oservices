@@ -1,0 +1,15 @@
+name: test-and-publish
+on:
+  push:
+    branches:
+      - 'develop'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          mamba-version: "*"
+          channels: defaults,conda-forge
+      - run: mamba install --file requirements.txt
