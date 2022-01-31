@@ -3,7 +3,7 @@ import tempfile
 import os
 
 from oservices import ConfigurationManager
-from .conf_util import simple_conf, simple_conf_manager, with_hd_conf_manager, with_hd_conf
+from conf_util import simple_conf, simple_conf_manager, with_hd_conf_manager, with_hd_conf
 
 
 class ConfTest(unittest.TestCase):
@@ -12,9 +12,13 @@ class ConfTest(unittest.TestCase):
             simple_conf.standard_configure(dir_path, "service", "component")
             conf_path = simple_conf.build(dir_path, "service", "component")
             # check conf path
-            self.assertEqual(os.path.join(dir_path, "conf", "service-component",
-                                          "outil.services.tests.conf_util.simple_conf"),
-                             conf_path)
+            self.assertEqual(
+                os.path.join(
+                    dir_path,
+                    "conf",
+                    "service-component",
+                    "conf_util.simple_conf"),
+                conf_path)
 
             # load conf
             _conf = ConfigurationManager.set_conf_from_file(conf_path)
@@ -34,7 +38,7 @@ class ConfTest(unittest.TestCase):
                     dir_path,
                     "conf",
                     "service-component",
-                    "outil.services.tests.conf_util.with_hd_conf"),
+                    "conf_util.with_hd_conf"),
                 conf_path)
 
             # load conf
@@ -42,14 +46,14 @@ class ConfTest(unittest.TestCase):
 
             # check conf is ok
             expected = dict(
-                    int=1,
-                    str="str",
-                    log_file_path=os.path.join(dir_path, "logging", "service-component-main.log"),
-                    db_dir_path=os.path.join(dir_path, "data", "service-component-adb"),
-                    sqlite_db=dict(
-                        ENGINE='django.db.backends.sqlite3',
-                        NAME=os.path.join(dir_path, "data", "service-component-db.sqlite3")
-                    )
+                int=1,
+                str="str",
+                log_file_path=os.path.join(dir_path, "logging", "service-component-main.log"),
+                db_dir_path=os.path.join(dir_path, "data", "service-component-adb"),
+                sqlite_db=dict(
+                    ENGINE='django.db.backends.sqlite3',
+                    NAME=os.path.join(dir_path, "data", "service-component-db.sqlite3")
+                )
             )
             self.assertEqual(
                 expected,

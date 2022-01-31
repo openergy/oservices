@@ -3,10 +3,10 @@ import inspect
 import sys
 
 
-from .processes import register_exit
 from .settings import SettingsManager, SettingsField
-from .backup import restore
-
+from .snippets.processes import register_exit
+# fixme: see if backup is still relevant (if not, remove). See work/backup.
+# from .backup import restore
 
 class AdminError(Exception):
     pass
@@ -313,14 +313,14 @@ class Administrator(SettingsManager):
         from django.core.management import execute_from_command_line
         execute_from_command_line([""] + unknown_args)
 
-    @Command(
-        CommandArg("-d", "--download_only", action="store_true", help="download only"),
-        CommandArg("-z", "--unzip_only", action="store_true", help="unzip only"),
-        CommandArg("-l", "--load_only", action="store_true", help="load only"),
-        help="downloads backup files, clears current files and restores backup files"
-    )
-    def cmd_restore(self, component, parsed_args, unknown_args):
-        """
-        downloads, unzips and loads data
-        """
-        restore(component, parsed_args, self.settings)
+    # @Command(
+    #     CommandArg("-d", "--download_only", action="store_true", help="download only"),
+    #     CommandArg("-z", "--unzip_only", action="store_true", help="unzip only"),
+    #     CommandArg("-l", "--load_only", action="store_true", help="load only"),
+    #     help="downloads backup files, clears current files and restores backup files"
+    # )
+    # def cmd_restore(self, component, parsed_args, unknown_args):
+    #     """
+    #     downloads, unzips and loads data
+    #     """
+    #     restore(component, parsed_args, self.settings)

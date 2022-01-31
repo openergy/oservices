@@ -7,11 +7,10 @@ import json
 import tempfile
 import sys
 
-from .processes import GracefulProcess, register_exit
-from outil.subprocesses import run_subprocess
-from outil.django_safe import initialize_django_files
-from outil.util import load_var
-from outil.services.conf import ConfigurationManager
+from .snippets.processes import GracefulProcess, register_exit
+from .snippets.streams_and_subprocesses import run_subprocess
+from .snippets.load_var import load_var
+from .configuration_management import ConfigurationManager
 
 
 logger = logging.getLogger(__name__)
@@ -157,6 +156,7 @@ class Component:
     # ------------------------------------- INITIALIZATION MANAGEMENT --------------------------------------------------
     @staticmethod
     def initialize_django_files(with_db=True, with_static=True):
+        from odjango.django_safe import initialize_django_files
         if with_db or with_static:
             initialize_django_files(migrations=with_db, static=with_static)
 
