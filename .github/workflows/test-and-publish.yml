@@ -19,18 +19,19 @@ jobs:
       - id: set-version
         run: echo "::set-output name=VERSION::$(sed -n '0,/^##/s/## //p' RELEASE.md)"
       # prepare version.py
-      - run: echo 'version = "${{ steps.set-version.outputs.VERSION }}"\n' > ./{{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
+      - run: echo 'version = "${{ steps.set-version.outputs.VERSION }}"\n' > ./${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
+      # add version
+      - run: git add ./${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
       # commit to develop
+      # || : => works as try/except:pass (commit may fail in cerain cases if code has not changed, \
+      #  but it shouldn't be a problem)
       - run: |
-          git add ./{{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py && \
-          git commit -m "[skip ci] updated version as {{ steps.set-version.outputs.VERSION }}" || : \
-          # || : => works as try/except:pass (commit may fail in cerain cases if code has not changed, \
-          #  but it shouldn't be a problem)
+          git commit -m "[skip ci] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
       # prepare build info
       - run: |
           mkdir conda-build \
           cp ./github/workflows-resources/meta.yaml conda-build/meta.yaml \
-          python ./github/workflows-resources/create_meta.py {{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
+          python ./github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
       # install miniconda with conda-build
       - uses: conda-incubator/setup-miniconda@v2
         with:
