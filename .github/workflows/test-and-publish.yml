@@ -129,7 +129,7 @@ jobs:
 
   version:
     needs: test
-    if: ${{ needs.build.outputs.VERSION }} != 'next'
+    if: needs.build.outputs.VERSION != 'next'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -137,6 +137,7 @@ jobs:
         # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
         # https://github.com/marketplace/actions/setup-miniconda#important
     steps:
+      - run: echo ${{ needs.build.outputs.VERSION }}
       # download repo
       - uses: actions/download-artifact@v2
         with:
