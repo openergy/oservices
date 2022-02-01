@@ -85,13 +85,14 @@ jobs:
     needs: build
     steps:
       # todo: remove
-      # ---------------------
+#      # ---------------------
+      - run: echo "pass"
 #      # checkout to repo dir (automatically on develop)
 #      - uses: actions/checkout@v2
-
-      # copy artifact
-      - run: cp -r ${{ github.workspace }}/.github/workflows-resources/conda-build ${HOME}/conda-build
-      # ---------------------
+#
+#      # copy artifact
+#      - run: cp -r ${{ github.workspace }}/.github/workflows-resources/conda-build ${HOME}/conda-build
+#      # ---------------------
 
 #      # download repo
 #      - uses: actions/download-artifact@v2
