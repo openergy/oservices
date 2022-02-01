@@ -41,7 +41,7 @@ jobs:
           git commit -m "[skip ci] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
       # prepare build info
       - run: mkdir conda-build
-      - run: cp ./.github/workflows-resources/meta.yaml conda-build/meta.yaml
+      - run: cp ./.github/workflows-resources/meta.yaml ./conda-build/meta.yaml
       - run: python ./.github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
       # install miniconda with conda-build
       - uses: conda-incubator/setup-miniconda@v2
