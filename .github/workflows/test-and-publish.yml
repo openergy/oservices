@@ -6,6 +6,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+        # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
+        # https://github.com/marketplace/actions/setup-miniconda#important
     outputs:
       REPOSITORY_NAME: ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}
       VERSION: ${{ steps.set-version.outputs.VERSION }}
@@ -35,11 +40,8 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           conda-build-version: "*"
-          auto-activate-base: true
-          activate-environment: ""
       # build
       - run: conda info
-      - run: conda init
       - run: cd conda-build
       - run: conda-build . --croot /conda-bld
 
