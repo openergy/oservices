@@ -167,3 +167,4 @@ jobs:
           sed -i "0,/^##/s/##/## next\\n\\n##/" RELEASE.md
           git commit RELEASE.md -m "[CI] added ## next to RELEASE.md"
           git push origin develop
+
