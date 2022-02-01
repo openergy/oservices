@@ -50,12 +50,12 @@ jobs:
       - run: python ./.github/workflows-resources/create_meta.py ${{ github.workspace }}/conda-build ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
       # build
       - run: cd conda-build
-      - run: conda-build . --croot ${{ github.workspace }}/../conda-build-to-upload
+      - run: conda-build . --croot ${{ github.workspace }}/conda-build-to-upload
       # upload build
       - uses: actions/upload-artifact@v2
         with:
           name: conda-build
-          path: ${{ github.workspace }}/../conda-build-to-upload
+          path: ${{ github.workspace }}/conda-build-to-upload
 
 
 #  test:
