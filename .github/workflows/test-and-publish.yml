@@ -18,26 +18,33 @@ jobs:
       # retrieve and store repository name
       - id: set-repository-name
         run: echo "::set-output name=REPOSITORY_NAME::${{ github.event.repository.name }}"
+
       # checkout to repo dir (automatically on develop)
       - uses: actions/checkout@v2
+
       # prepare conda cache
       # https://github.com/marketplace/actions/setup-miniconda#caching
       - uses: actions/cache@v2
         with:
           path: ~/conda_pkgs_dir
           key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
       # retrieve version in RELEASE.md ('next' or version number)
       - id: set-version
         run: echo "::set-output name=VERSION::$(sed -n '0,/^##/s/## //p' RELEASE.md)"
+
       # prepare version.py
       - run: echo 'version = "${{ steps.set-version.outputs.VERSION }}"\n' > ./${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
+
       # add version
       - run: git add ./${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
+
       # commit to develop
       # || : => works as try/except:pass (commit may fail in cerain cases if code has not changed, \
       #  but it shouldn't be a problem)
       - run: |
           git commit -m "[skip ci] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
+
       # install miniconda with conda-build
       - uses: conda-incubator/setup-miniconda@v2
         with:
@@ -45,28 +52,47 @@ jobs:
           conda-build-version: "*"
           auto-activate-base: true
           activate-environment: ""
+
       # prepare build info
       - run: mkdir conda-build
       - run: python ./.github/workflows-resources/create_meta.py ${{ github.workspace }}/conda-build ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
+
       # build
       - run: cd conda-build
       - run: conda-build . --croot ~/conda-build-to-upload
+
       # upload build
       - uses: actions/upload-artifact@v2
         with:
           name: conda-build
           path: ~/conda-build-to-upload
+          retention-days: 1
 
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # download build
+      - uses: actions/download-artifact@v2
+        with:
+          name: conda-build
+          path: ~/conda-build
 
-#  test:
-#    runs-on: ubuntu-latest
-#    needs: build
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: conda-incubator/setup-miniconda@v2
-#        with:
-#          mamba-version: "*"
-#          channels: defaults,conda-forge
-#      - run: mamba install --file requirements.txt
-#      - run: mamba install pytest pytest-cov
-#      - run: pytest tests/
+      # prepare miniconda cache
+      - uses: actions/cache@v2
+        with:
+          path: ~/conda_pkgs_dir
+          key: ${{ runner.os }}-${{ hashFiles('~/conda-build/**') }}
+
+      # install miniconda
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          mamba-version: "*"
+          channels: defaults,conda-forge
+
+      # install package
+      - run: mamba install -q -c file://~/conda-build ${{ jobs.build.outputs.REPOSITORY_NAME }}=${{ jobs.build.outputs.VERSION }}
+
+      # install tests packages and run tests
+      - run: mamba install pytest pytest-cov
+      - run: pytest tests/
