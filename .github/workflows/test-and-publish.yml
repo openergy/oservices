@@ -45,7 +45,13 @@ jobs:
       # build
       - run: conda info
       - run: cd conda-build
-      - run: conda-build . --croot /conda-bld/
+      - run: conda-build . --croot ${{ github.workspace }}/conda-build
+      # upload build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: conda-build
+          path: ${{ github.workspace }}/conda-build
+
 
 #  test:
 #    runs-on: ubuntu-latest
