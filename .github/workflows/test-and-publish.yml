@@ -46,7 +46,7 @@ jobs:
       # || : => works as try/except:pass (commit may fail in certain cases if code has not changed, \
       #  but it shouldn't be a problem)
       - run: |
-          git commit -m "[skip ci] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
+          git commit -m "[CI] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
           git push origin develop
 
       # install miniconda with conda-build
@@ -93,11 +93,11 @@ jobs:
           name: conda-build
           path: ${HOME}/conda-build
 
-      # prepare miniconda cache
-      - uses: actions/cache@v2
-        with:
-          path: ~/conda_pkgs_dir
-          key: ${{ runner.os }}-${{ hashFiles('~/conda-build/**') }}
+#      # prepare miniconda cache
+#      - uses: actions/cache@v2
+#        with:
+#          path: ~/conda_pkgs_dir
+#          key: ${{ runner.os }}-${{ hashFiles('~/conda-build/**') }}
 
       # install miniconda
       - uses: conda-incubator/setup-miniconda@v2
