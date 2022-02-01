@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2
       # prepare conda cache
       # https://github.com/marketplace/actions/setup-miniconda#caching
-      - uses: action/cache@v2
+      - uses: actions/cache@v2
         with:
           path: ~/conda_pkgs_dir
           key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
