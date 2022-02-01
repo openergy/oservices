@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       # retrieve version in RELEASE.md ('next' or version number)
       - id: set-version
-        run: echo "::set-ouptut name=VERSION::$(sed -n '0,/^##/s/## //p' RELEASE.md)"
+        run: echo "::set-output name=VERSION::$(sed -n '0,/^##/s/## //p' RELEASE.md)"
       # prepare version.py
       - run: echo 'version = "${{ steps.set-version.outputs.VERSION }}"\n' > ./{{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
       # commit to develop
