@@ -98,12 +98,12 @@ jobs:
 #        with:
 #          name: repo
 #          path: ${{ github.workspace }}
-
-      # download build
-      - uses: actions/download-artifact@v2
-        with:
-          name: conda-build
-          path: ${HOME}/conda-build
+#
+#      # download build
+#      - uses: actions/download-artifact@v2
+#        with:
+#          name: conda-build
+#          path: ${HOME}/conda-build
 
       # prepare miniconda cache
       - uses: actions/cache@v2
