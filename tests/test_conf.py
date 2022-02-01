@@ -3,7 +3,7 @@ import tempfile
 import os
 
 from oservices import ConfigurationManager
-from conf_util import simple_conf, simple_conf_manager, with_hd_conf_manager, with_hd_conf
+from tests.conf_util import simple_conf, simple_conf_manager, with_hd_conf_manager, with_hd_conf
 
 
 class ConfTest(unittest.TestCase):
@@ -17,7 +17,7 @@ class ConfTest(unittest.TestCase):
                     dir_path,
                     "conf",
                     "service-component",
-                    "conf_util.simple_conf"),
+                    "tests.conf_util.simple_conf"),
                 conf_path)
 
             # load conf
@@ -38,7 +38,7 @@ class ConfTest(unittest.TestCase):
                     dir_path,
                     "conf",
                     "service-component",
-                    "conf_util.with_hd_conf"),
+                    "tests.conf_util.with_hd_conf"),
                 conf_path)
 
             # load conf

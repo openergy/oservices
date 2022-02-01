@@ -1,0 +1,7 @@
+name: conda-build-env
+
+channels:
+  - defaults
+
+dependencies:
+  - conda-build
