@@ -85,7 +85,7 @@ jobs:
 
       # todo: remove
       # copy artifact
-      - run: cp -r ${{ github.workspace }}/.github/workflows-resources/conda-build ./conda-build
+      - run: cp -r ${{ github.workspace }}/.github/workflows-resources/conda-build ${HOME}/conda-build
 #      # download build
 #      - uses: actions/download-artifact@v2
 #        with:
@@ -105,7 +105,7 @@ jobs:
           channels: defaults,conda-forge
 
       # install package (we use ${HOME} because ~ syntax is not recognized by conda
-      - run: mamba install -q -c file://${HOME}/conda-build ${{ needs.build.outputs.REPOSITORY_NAME }}=${{ needs.build.outputs.VERSION }}
+      - run: mamba install -q -c file://${HOME}/conda-build/ ${{ needs.build.outputs.REPOSITORY_NAME }}=${{ needs.build.outputs.VERSION }}
 
       # install tests packages, prepare and run tests
       - run: mamba install pytest pytest-cov
