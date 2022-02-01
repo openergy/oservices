@@ -85,7 +85,7 @@ jobs:
 
       # todo: remove
       # copy artifact
-      - run: cp ${{ github.workspace }}/.github/workflows-resources/conda-build ./conda-build
+      - run: cp -r ${{ github.workspace }}/.github/workflows-resources/conda-build ./conda-build
 #      # download build
 #      - uses: actions/download-artifact@v2
 #        with:
@@ -109,6 +109,6 @@ jobs:
 
       # install tests packages, prepare and run tests
       - run: mamba install pytest pytest-cov
-      - run: cp ${{ github.workspace }}/tests ./tests
+      - run: cp -r ${{ github.workspace }}/tests ./tests
       # fixme: manage coverage
-      - run: pytest tests/
+      - run: pytest tests
