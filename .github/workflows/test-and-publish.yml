@@ -80,9 +80,6 @@ jobs:
       # checkout to repo dir (automatically on develop)
       - uses: actions/checkout@v2
 
-      # move to home
-      - run: cd ~
-
       # todo: remove
       # copy artifact
       - run: cp -r ${{ github.workspace }}/.github/workflows-resources/conda-build ${HOME}/conda-build
@@ -109,6 +106,6 @@ jobs:
 
       # install tests packages, prepare and run tests
       - run: mamba install pytest pytest-cov
-      - run: cp -r ${{ github.workspace }}/tests ./tests
+      - run: cp -r ${{ github.workspace }}/tests ${HOME}/tests
       # fixme: manage coverage
-      - run: pytest tests
+      - run: cd ${HOME} && pytest tests
