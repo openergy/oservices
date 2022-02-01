@@ -28,11 +28,10 @@ __dependencies__
 """
 
 if __name__ == "__main__":
-    print(sys.argv)
     # --- retrieve parameters
     target_dir_path = sys.argv[1]
-    repo_name = sys.argv[1]
-    arch_specific = sys.argv[2]
+    repo_name = sys.argv[2]
+    arch_specific = sys.argv[3]
 
     # --- prepare variables
     try:
