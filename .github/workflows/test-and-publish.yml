@@ -15,6 +15,8 @@ jobs:
       REPOSITORY_NAME: ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}
       VERSION: ${{ steps.set-version.outputs.VERSION }}
     steps:
+      - run: echo${{ github.workspace }}
+      - run: 0/1
       # retrieve and store repository name
       - id: set-repository-name
         run: echo "::set-output name=REPOSITORY_NAME::${{ github.event.repository.name }}"
