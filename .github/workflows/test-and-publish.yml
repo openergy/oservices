@@ -28,18 +28,16 @@ jobs:
       - run: |
           git commit -m "[skip ci] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
       # prepare build info
-      - run: |
-          mkdir conda-build \
-          cp ./.github/workflows-resources/meta.yaml conda-build/meta.yaml \
-          python ./.github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
+      - run: mkdir conda-build
+      - run: cp ./.github/workflows-resources/meta.yaml conda-build/meta.yaml
+      - run: python ./.github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
       # install miniconda with conda-build
       - uses: conda-incubator/setup-miniconda@v2
         with:
           environment-file: ./.github/workflows-resources/conda-build-env.yml
       # build
-      - run: |
-          cd conda-build \
-          conda-build . --croot /conda-bld
+      - run: cd conda-build
+      - run: conda-build . --croot /conda-bld
 
 #  test:
 #    runs-on: ubuntu-latest
