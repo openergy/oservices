@@ -33,8 +33,7 @@ jobs:
       - run: python ./.github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
       # install miniconda with conda-build
       - uses: conda-incubator/setup-miniconda@v2
-        with:
-          environment-file: ./.github/workflows-resources/conda-build-env.yml
+      - run: conda install conda-build
       # build
       - run: cd conda-build
       - run: conda-build . --croot /conda-bld
