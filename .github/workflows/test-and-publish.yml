@@ -22,12 +22,12 @@ jobs:
       # checkout repo (automatically on develop)
       - uses: actions/checkout@v2
 
-#      # upload repo (we ensure it does not change during testing process)
-#      - uses: actions/upload-artifact@v2
-#        with:
-#          name: repo
-#          path: ${{ github.workspace }}
-#          retention-days: 1
+      # upload repo (we ensure it does not change during testing process)
+      - uses: actions/upload-artifact@v2
+        with:
+          name: repo
+          path: ${{ github.workspace }}
+          retention-days: 1
 #
 #      # prepare conda cache
 #      # https://github.com/marketplace/actions/setup-miniconda#caching
@@ -129,7 +129,7 @@ jobs:
 
   version:
     needs: test
-    if: ${{ needs.build.outputs.VERSION }} != "next"
+    if: ${{ needs.build.outputs.VERSION }} != 'next'
     runs-on: ubuntu-latest
     defaults:
       run:
