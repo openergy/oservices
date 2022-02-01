@@ -12,7 +12,7 @@ jobs:
     steps:
       # retrieve and store repository name
       - id: get_repository_name
-        run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+        run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
       # checkout to repo dir (automatically on develop)
       - uses: actions/checkout@v2
       # go to repo dir
