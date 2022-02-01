@@ -22,7 +22,7 @@ jobs:
       - run: echo 'version = "${{ steps.set-version.outputs.VERSION }}"\n' > ./{{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
       # commit to develop
       - run: |
-          git add ./{{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py \
+          git add ./{{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py && \
           git commit -m "[skip ci] updated version as {{ steps.set-version.outputs.VERSION }}" || : \
           # || : => works as try/except:pass (commit may fail in cerain cases if code has not changed, \
           #  but it shouldn't be a problem)
