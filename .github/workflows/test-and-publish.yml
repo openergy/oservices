@@ -15,13 +15,10 @@ jobs:
       REPOSITORY_NAME: ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}
       VERSION: ${{ steps.set-version.outputs.VERSION }}
     steps:
-      - run: echo${{ github.workspace }}
-      - run: 0/1
       # retrieve and store repository name
       - id: set-repository-name
         run: echo "::set-output name=REPOSITORY_NAME::${{ github.event.repository.name }}"
       # checkout to repo dir (automatically on develop)
-      - run: ls -al
       - uses: actions/checkout@v2
       # retrieve version in RELEASE.md ('next' or version number)
       - run: ls -al
@@ -48,16 +45,13 @@ jobs:
           auto-activate-base: true
           activate-environment: ""
       # build
-      - run: ls -al
-      - run: pwd
-      - run: echo ${{ github.workspace }}
       - run: cd conda-build
-      - run: conda-build . --croot ${{ github.workspace }}/conda-build
+      - run: conda-build . --croot ${{ github.workspace }}/../conda-build
       # upload build
       - uses: actions/upload-artifact@v2
         with:
           name: conda-build
-          path: ${{ github.workspace }}/conda-build
+          path: ${{ github.workspace }}/../conda-build
 
 
 #  test:
