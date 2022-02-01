@@ -21,13 +21,6 @@ jobs:
 
       # checkout repo (automatically on develop)
       - uses: actions/checkout@v2
-
-      # upload repo (we ensure it does not change during testing process)
-      - uses: actions/upload-artifact@v2
-        with:
-          name: repo
-          path: ${{ github.workspace }}
-          retention-days: 1
 #
 #      # prepare conda cache
 #      # https://github.com/marketplace/actions/setup-miniconda#caching
@@ -74,6 +67,13 @@ jobs:
 #          name: conda-build
 #          path: ~/conda-build-to-upload
 #          retention-days: 1
+
+      # upload repo (we ensure it does not change during testing process)
+      - uses: actions/upload-artifact@v2
+        with:
+          name: repo
+          path: ${{ github.workspace }}
+          retention-days: 1
 
   test:
     runs-on: ubuntu-latest
@@ -143,3 +143,27 @@ jobs:
         with:
           name: repo
           path: ${{ github.workspace }}
+
+      # go to repo
+      - run: cd ${{ github.workspace }}
+
+      # checkout master and merge develop
+      - run: |
+          git checkout master
+          git merge --ff-only develop || ( echo \'ERROR: please merge your branch with the current version of master before versioning\' && exit 1 )
+
+      # version and push master
+      - run: |
+          echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
+          git tag ${{ needs.build.outputs.VERSION }}"
+          git push origin master
+          git push origin ${{ needs.build.outputs.VERSION }}
+
+      # checkout, prepare and push develop
+      - run: |
+          git checkout develop
+          git merge master
+          # add the next version
+          sed -i "0,/^##/s/##/## next\\n\\n##/" RELEASE.md
+          git commit RELEASE.md -m "[CI] added ## next to RELEASE.md"
+          git push origin develop
