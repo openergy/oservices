@@ -47,8 +47,7 @@ jobs:
           activate-environment: ""
       # prepare build info
       - run: mkdir conda-build
-      - run: cp ./.github/workflows-resources/meta.yaml ./conda-build/meta.yaml
-      - run: python ./.github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
+      - run: python ./.github/workflows-resources/create_meta.py ${{ github.workspace }}/conda_build ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
       # build
       - run: cd conda-build
       - run: conda-build . --croot ${{ github.workspace }}/../conda-build-to-upload

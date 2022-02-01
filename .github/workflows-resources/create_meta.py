@@ -1,10 +1,39 @@
 import os
 import sys
 
+meta = """
+package:
+  name: __name__
+  version: "__version__"
+
+source:
+  path: __path__
+
+build:
+  number: 0
+  script: python -m pip install --no-deps --ignore-installed .
+  include_recipe: False
+__noarch__
+
+requirements:
+  build:
+    - python>=3.6,<4.0
+    - setuptools 
+    - pip
+__build_requirements__
+  
+  run:
+    - python>=3.6,<4.0
+__dependencies__
+"""
+
 if __name__ == "__main__":
-    # get repository name
+    # --- retrieve parameters
+    target_dir_path = sys.argv[1]
     repo_name = sys.argv[1]
     arch_specific = sys.argv[2]
+
+    # --- prepare variables
     try:
         python_version = sys.argv[3] if sys.argv[3] in ("3.6", "3.7") else None
     except IndexError:
@@ -19,10 +48,10 @@ if __name__ == "__main__":
                     break
     except:
         raise ValueError("Could not parse version from RELEASE.md")
-    if version == '':
+    if version == "":
         raise ValueError("Could not parse version from RELEASE.md")
-    with open("./conda-build/meta.yaml", "r") as f:
-        meta = f.read()
+
+    # --- replace meta variables
     if arch_specific == "true":
         meta = meta.replace("__noarch__", "")
         meta = meta.replace("__build_requirements__", "    - cython\n    - numpy")
@@ -36,6 +65,8 @@ if __name__ == "__main__":
         meta = meta.replace("python>=3.6,<4.0", "python>=3.6,<3.7")
     elif python_version == "3.7":
         meta = meta.replace("python>=3.6,<4.0", "python>=3.7,<3.8")
+
+    # --- manage dependencies
     dependencies = ""
     # try:
     with open("./requirements.txt", "r") as f:
@@ -44,36 +75,8 @@ if __name__ == "__main__":
             if line.startswith("#") or line == "":
                 continue
             dependencies += f"    - {line}\n"
-    # except FileNotFoundError:
-    #     # maybe old version:
-    #     if not os.path.isfile('requirements-pip.txt'):
-    #         raise
-    #     with open('requirements-pip.txt', 'r') as f:
-    #         for line in f.readlines():
-    #             line = line.strip()
-    #             dependencies += f'    - {line}'
-    #     if os.path.isfile('requirements-conda.txt'):
-    #         with open('requirements-conda.txt', 'r') as f:
-    #             for line in f.readlines():
-    #                 line = line.strip()
-    #                 dependencies += f'    - {line}'
-    #     if os.path.isfile('requirements-conda.yml'):
-    #         with open('requirements-conda.yml', 'r') as f:
-    #             start = False
-    #             for line in f.readlines():
-    #                 if start:
-    #                     line = line.strip()
-    #                     if not line.startswith('-'):
-    #                         break
-    #                     dependencies += f'    {line}\n'
-    #                 elif 'dependencies' in line:
-    #                     start = True
-    #     if os.path.isfile('requirements-openergy.txt'):
-    #         with open('requirements-openergy.txt', 'r') as f:
-    #             for line in f.readlines():
-    #                 line = line.strip()
-    #                 dependencies += f'    - {line}'
-    if arch_specific == "true" and os.path.isfile('./linux_requirements.txt'):
+    # manage linux requiremenets
+    if arch_specific == "true" and os.path.isfile("./linux_requirements.txt"):
         with open("./linux_requirements.txt", "r") as f:
             for line in f.readlines():
                 line = line.strip()
@@ -81,8 +84,7 @@ if __name__ == "__main__":
                     continue
                 dependencies += f"    - {line}\n"
     meta = meta.replace("__dependencies__", dependencies)
-    with open("./conda-build/meta.yaml", "w") as f:
-        f.write(meta)
 
-    with open("./conda-build/meta.yaml") as f:
-        print(f.read())
+    # write to target
+    with open(os.path.join(target_dir_path, "meta.yaml"), "w") as f:
+        f.write(meta)
