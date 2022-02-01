@@ -25,7 +25,7 @@ jobs:
       - uses: action/cache@v2
         with:
           path: ~/conda_pkgs_dir
-          key: ${{ runner.os }}-${{ hashFiles("requirements.txt") }}
+          key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
       # retrieve version in RELEASE.md ('next' or version number)
       - run: ls -al
       - id: set-version
