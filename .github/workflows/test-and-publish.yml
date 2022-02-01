@@ -39,6 +39,7 @@ jobs:
       # install miniconda with conda-build
       - uses: conda-incubator/setup-miniconda@v2
         with:
+          channels: conda-forge
           conda-build-version: "*"
           auto-activate-base: true
           activate-environment: ""
