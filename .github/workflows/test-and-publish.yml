@@ -19,8 +19,10 @@ jobs:
       - id: set-repository-name
         run: echo "::set-output name=REPOSITORY_NAME::${{ github.event.repository.name }}"
       # checkout to repo dir (automatically on develop)
+      - run: ls -al
       - uses: actions/checkout@v2
       # retrieve version in RELEASE.md ('next' or version number)
+      - run: ls -al
       - id: set-version
         run: echo "::set-output name=VERSION::$(sed -n '0,/^##/s/## //p' RELEASE.md)"
       # prepare version.py
@@ -44,7 +46,9 @@ jobs:
           auto-activate-base: true
           activate-environment: ""
       # build
-      - run: conda info
+      - run: ls -al
+      - run: pwd
+      - run: echo ${{ github.workspace }}
       - run: cd conda-build
       - run: conda-build . --croot ${{ github.workspace }}/conda-build
       # upload build
