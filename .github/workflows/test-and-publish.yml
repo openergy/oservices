@@ -7,30 +7,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      REPOSITORY_NAME: ${{ steps.get_repository_name.outputs.REPOSITORY_NAME }}
-      VERSION: ${{ steps.get_version.outputs.VERSION }}
+      REPOSITORY_NAME: ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}
+      VERSION: ${{ steps.set-version.outputs.VERSION }}
     steps:
       # retrieve and store repository name
-      - id: get_repository_name
-        run: echo ::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+      - id: set-repository-name
+        run: echo "::set-output name=REPOSITORY_NAME::${{ github.event.repository.name }}"
       # checkout to repo dir (automatically on develop)
       - uses: actions/checkout@v2
       # retrieve version in RELEASE.md ('next' or version number)
-      - id: get_version
-        run: echo '::set-ouptut name=VERSION::sed -n "0,/^##/s/## //p" ./RELEASE.md'
+      - id: set-version
+        run: echo "::set-ouptut name=VERSION::sed -n \"0,/^##/s/## //p\" ./RELEASE.md"
       # prepare version.py
-      - run: echo 'version = "${{steps.get_version.outputs.VERSION}}"\n' > ./{{steps.get_repository_name.outputs.REPOSITORY_NAME}}/version.py
+      - run: echo 'version = "${{ steps.set-version.outputs.VERSION }}"\n' > ./{{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
       # commit to develop
       - run: |
-          git add ./{{steps.get_repository_name.outputs.REPOSITORY_NAME}}/version.py \
-          git commit -m "[skip ci] updated version as {{steps.get_version.outputs.VERSION}}" || : \
+          git add ./{{ steps.get_repository_name.outputs.REPOSITORY_NAME }}/version.py \
+          git commit -m "[skip ci] updated version as {{ steps.get_version.outputs.VERSION }}" || : \
           # || : => works as try/except:pass (commit may fail in cerain cases if code has not changed, \
           #  but it shouldn\'t be a problem)
       # prepare build info
       - run: |
           mkdir conda-build \
           cp ./github/workflows-resources/meta.yaml conda-build/meta.yaml \
-          python ./github/workflows-resources/create_meta.py {{steps.get_repository_name.outputs.REPOSITORY_NAME}} false
+          python ./github/workflows-resources/create_meta.py {{ steps.get_repository_name.outputs.REPOSITORY_NAME }} false
       # install miniconda with conda-build
       - uses: conda-incubator/setup-miniconda@v2
         with:
