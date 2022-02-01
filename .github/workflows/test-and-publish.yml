@@ -27,7 +27,6 @@ jobs:
           path: ~/conda_pkgs_dir
           key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
       # retrieve version in RELEASE.md ('next' or version number)
-      - run: ls -al
       - id: set-version
         run: echo "::set-output name=VERSION::$(sed -n '0,/^##/s/## //p' RELEASE.md)"
       # prepare version.py
@@ -39,10 +38,6 @@ jobs:
       #  but it shouldn't be a problem)
       - run: |
           git commit -m "[skip ci] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
-      # prepare build info
-      - run: mkdir conda-build
-      - run: cp ./.github/workflows-resources/meta.yaml ./conda-build/meta.yaml
-      - run: python ./.github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
       # install miniconda with conda-build
       - uses: conda-incubator/setup-miniconda@v2
         with:
@@ -50,14 +45,18 @@ jobs:
           conda-build-version: "*"
           auto-activate-base: true
           activate-environment: ""
+      # prepare build info
+      - run: mkdir conda-build
+      - run: cp ./.github/workflows-resources/meta.yaml ./conda-build/meta.yaml
+      - run: python ./.github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
       # build
       - run: cd conda-build
-      - run: conda-build . --croot ${{ github.workspace }}/../conda-build
+      - run: conda-build . --croot ${{ github.workspace }}/../conda-build-to-upload
       # upload build
       - uses: actions/upload-artifact@v2
         with:
           name: conda-build
-          path: ${{ github.workspace }}/../conda-build
+          path: ${{ github.workspace }}/../conda-build-to-upload
 
 
 #  test:

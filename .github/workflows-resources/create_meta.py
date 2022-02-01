@@ -83,4 +83,6 @@ if __name__ == "__main__":
     meta = meta.replace("__dependencies__", dependencies)
     with open("./conda-build/meta.yaml", "w") as f:
         f.write(meta)
-    print(meta)
+
+    with open("./conda-build/meta.yaml") as f:
+        print(f.read())
