@@ -30,8 +30,8 @@ jobs:
       # prepare build info
       - run: |
           mkdir conda-build \
-          cp ./github/workflows-resources/meta.yaml conda-build/meta.yaml \
-          python ./github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
+          cp ./.github/workflows-resources/meta.yaml conda-build/meta.yaml \
+          python ./.github/workflows-resources/create_meta.py ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
       # install miniconda with conda-build
       - uses: conda-incubator/setup-miniconda@v2
         with:
