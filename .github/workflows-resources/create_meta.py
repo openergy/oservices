@@ -28,6 +28,7 @@ __dependencies__
 """
 
 if __name__ == "__main__":
+    print(sys.argv)
     # --- retrieve parameters
     target_dir_path = sys.argv[1]
     repo_name = sys.argv[1]
@@ -88,3 +89,5 @@ if __name__ == "__main__":
     # write to target
     with open(os.path.join(target_dir_path, "meta.yaml"), "w") as f:
         f.write(meta)
+
+    print(meta)
