@@ -19,8 +19,11 @@ jobs:
       - id: set-repository-name
         run: echo "::set-output name=REPOSITORY_NAME::${{ github.event.repository.name }}"
 
-      # checkout repo (automatically on develop)
+      # checkout repo (automatically on develop) and configure git
       - uses: actions/checkout@v2
+      - run: |
+          git config user.name Openergy Admin
+          git config user.email admin@openergy.fr
 
       # prepare conda cache
       # https://github.com/marketplace/actions/setup-miniconda#caching
@@ -31,7 +34,7 @@ jobs:
 
       # retrieve version in RELEASE.md ('next' or version number)
       - id: set-version
-        run: echo "::set-output name=VERSION::echo $(sed -n '0,/^##/s/## //p' RELEASE.md)"
+        run: echo "::set-output name=VERSION::$(sed -n '0,/^##/s/## //p' RELEASE.md)"
 
       # prepare version.py
       - run: echo 'version = "${{ steps.set-version.outputs.VERSION }}"\n' > ./${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
@@ -80,6 +83,9 @@ jobs:
     steps:
       # checkout repo (automatically on develop)
       - uses: actions/checkout@v2
+      - run: |
+          git config user.name Openergy Admin
+          git config user.email admin@openergy.fr
 
       # download build
       - uses: actions/download-artifact@v2
@@ -120,6 +126,9 @@ jobs:
     steps:
       # checkout repo (automatically on develop)
       - uses: actions/checkout@v2
+      - run: |
+          git config user.name Openergy Admin
+          git config user.email admin@openergy.fr
 
       # checkout master and merge develop
       - run: |
