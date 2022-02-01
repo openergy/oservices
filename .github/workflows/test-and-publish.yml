@@ -35,6 +35,8 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           conda-build-version: "*"
+          auto-activate-base: true
+          activate-environment: ""
       # build
       - run: cd conda-build
       - run: conda-build . --croot /conda-bld
