@@ -1,0 +1,28 @@
+{
+  "info": {
+    "subdir": "noarch"
+  },
+  "packages": {
+    "oservices-next-py_0.tar.bz2": {
+      "build": "py_0",
+      "build_number": 0,
+      "depends": [
+        "aioftp >=0.13,<0.14",
+        "applicationinsights >=0.11,<0.12",
+        "psutil >=5,<6",
+        "python >=3.6,<4.0"
+      ],
+      "md5": "f92a45f7335e3238579a21a5941ba1c5",
+      "name": "oservices",
+      "noarch": "python",
+      "sha256": "e19937d40d0206408ca9b35be40d786bd5369b8ce147a0c59f68468a83eec698",
+      "size": 19912,
+      "subdir": "noarch",
+      "timestamp": 1643733387024,
+      "version": "next"
+    }
+  },
+  "packages.conda": {},
+  "removed": [],
+  "repodata_version": 1
+}
