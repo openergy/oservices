@@ -164,6 +164,7 @@ jobs:
       # checkout master and merge develop
       - run: |
           set -e
+          git fetch origin master  # by default, actions/checkout@v2 fetch-depth is 1, so origin/master is invisible
           git checkout master
           git merge --ff-only develop || ( echo \'ERROR: please merge your branch with the current version of master before versioning\' && exit 1 )
         working-directory: ${{ github.workspace }}/repo
