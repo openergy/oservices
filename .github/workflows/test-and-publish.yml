@@ -159,7 +159,6 @@ jobs:
           set -e
           git config user.name Openergy Admin
           git config user.email admin@openergy.fr
-          git fetch
         working-directory: ${{ github.workspace }}/repo
 
       # checkout master and merge develop
@@ -167,11 +166,11 @@ jobs:
           set -e
 
           # checkout master
-          # git fetch origin master  # by default, actions/checkout@v2 fetch-depth is 1, so origin/master is invisible
+          git fetch origin master  # by default, actions/checkout@v2 fetch-depth is 1, so origin/master is invisible
           git checkout master
 
           # merge develop
-          git merge develop
+          git merge --allow-unrelated-histories develop
 
           # create version
           echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
