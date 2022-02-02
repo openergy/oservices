@@ -200,7 +200,6 @@ jobs:
         working-directory: ${{ github.workspace }}
     steps:
       - run: |
-          mkdir ${{ github.workspace }}
           echo $CONDA_CHANNEL_RCLONE_CONF > ~/.rclone.conf
           cat ~/.rclone.conf
         env:
