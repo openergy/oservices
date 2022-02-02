@@ -27,6 +27,7 @@ jobs:
 
       # configure git
       - run: |
+          set -e
           git config user.name Openergy Admin
           git config user.email admin@openergy.fr
         working-directory: ${{ github.workspace }}/repo
@@ -55,6 +56,7 @@ jobs:
       # || : => works as try/except:pass (commit may fail in certain cases if code has not changed, \
       #  but it shouldn't be a problem)
       - run: |
+          set -e
           git commit -m "[CI] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
           git push origin develop
         working-directory: ${{ github.workspace }}/repo
@@ -69,6 +71,7 @@ jobs:
 
       # prepare build info
       - run: |
+          set -e
           mkdir conda-build
           python .github/workflows-resources/create_meta.py conda-build ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
         working-directory: ${{ github.workspace }}/repo
@@ -101,6 +104,7 @@ jobs:
 
       # configure git
       - run: |
+          set -e
           git config user.name Openergy Admin
           git config user.email admin@openergy.fr
         working-directory: ${{ github.workspace }}/repo
@@ -110,7 +114,6 @@ jobs:
         with:
           name: conda-build
           path: ${{ github.workspace }}/conda-build
-      - run: cd ${{ github.workspace }} && ls -R  # fixme: remove
 
       # prepare miniconda cache
       - uses: actions/cache@v2
@@ -153,18 +156,21 @@ jobs:
 
       # configure git
       - run: |
+          set -e
           git config user.name Openergy Admin
           git config user.email admin@openergy.fr
         working-directory: ${{ github.workspace }}/repo
 
       # checkout master and merge develop
       - run: |
+          set -e
           git checkout master
           git merge --ff-only develop || ( echo \'ERROR: please merge your branch with the current version of master before versioning\' && exit 1 )
         working-directory: ${{ github.workspace }}/repo
 
       # version and push master
       - run: |
+          set -e
           echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
           git tag ${{ needs.build.outputs.VERSION }}
           git push origin master
@@ -173,6 +179,7 @@ jobs:
 
       # checkout, prepare and push develop
       - run: |
+          set -e
           git checkout develop
           git merge master
           # add the next version
@@ -188,19 +195,32 @@ jobs:
       run:
         working-directory: $ {{ github.workspace }}
     steps:
-      # download build
-      - uses: actions/download-artifact@v2
-        with:
-          name: conda-build
-          path: ${{ github.workspace }}/conda-build
-      - run: ls -R
-
       # install rclone and write config
       - run: |
+          set -e
           wget https://rclone.org/install.sh
           chmod +x install.sh
           ./install.sh
           echo $CONDA_CHANNEL_RCLONE_CONF > ~/.rclone.conf
         env:
           CONDA_CHANNEL_RCLONE_CONF: ${{ secrets.CONDA_CHANNEL_RCLONE_CONF }}
+
+      # install miniconda with conda-build
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          channels: conda-forge
+          conda-build-version: "*"
+          auto-activate-base: true
+          activate-environment: ""
+
+      # download build
+      - uses: actions/download-artifact@v2
+        with:
+          name: conda-build
+          path: ${{ github.workspace }}/conda-build
+
+      # download packages, update index and upload to channel
+      - run: rclone copy condachannel:static conda-build
+
+
 
