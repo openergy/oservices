@@ -93,11 +93,11 @@ jobs:
           name: conda-build
           path: ${HOME}/conda-build
 
-#      # prepare miniconda cache
-#      - uses: actions/cache@v2
-#        with:
-#          path: ~/conda_pkgs_dir
-#          key: ${{ runner.os }}-${{ hashFiles('~/conda-build/**') }}
+      # prepare miniconda cache
+      - uses: actions/cache@v2
+        with:
+          path: ~/conda_pkgs_dir
+          key: ${{ runner.os }}-${{ hashFiles('${HOME}/conda-build/**') }}
 
       # install miniconda
       - uses: conda-incubator/setup-miniconda@v2
@@ -105,8 +105,8 @@ jobs:
           mamba-version: "*"
           channels: defaults,conda-forge
 
-      # install package (!! must leave / at the end of conda-build or else command fails)
-      - run: mamba install -q -c file://${HOME}/conda-build/ ${{ needs.build.outputs.REPOSITORY_NAME }}=${{ needs.build.outputs.VERSION }}
+      # install package
+      - run: mamba install -q -c ${HOME}/conda-build ${{ needs.build.outputs.REPOSITORY_NAME }}=${{ needs.build.outputs.VERSION }}
 
       # install tests packages, prepare and run tests
       - run: mamba install pytest pytest-cov
