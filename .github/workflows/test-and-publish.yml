@@ -164,9 +164,32 @@ jobs:
       # checkout master and merge develop
       - run: |
           set -e
+
+          # checkout master
           git fetch origin master  # by default, actions/checkout@v2 fetch-depth is 1, so origin/master is invisible
           git checkout master
+
+          # merge develop
           git merge --ff-only develop || ( echo \'ERROR: please merge your branch with the current version of master before versioning\' && exit 1 )
+
+          # create version
+          echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
+          git tag ${{ needs.build.outputs.VERSION }}
+
+          # push
+          git push origin master
+          git push origin ${{ needs.build.outputs.VERSION }}
+
+          # checkout develop and merge master
+          git checkout develop
+          git merge master
+
+          # add the next version
+          sed -i "0,/^##/s/##/## next\\n\\n##/" RELEASE.md
+
+          # commit and push develop
+          git commit RELEASE.md -m "[CI] added ## next to RELEASE.md"
+          git push origin develop
         working-directory: ${{ github.workspace }}/repo
 
       # version and push master
@@ -188,7 +211,6 @@ jobs:
           git commit RELEASE.md -m "[CI] added ## next to RELEASE.md"
           git push origin develop
         working-directory: ${{ github.workspace }}/repo
-
 
 #  conda-upload:
 #    needs: [build, test, version]  # we want to make sure that versioning worked before uploading to conda channel
