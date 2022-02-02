@@ -201,10 +201,10 @@ jobs:
     steps:
 #      # -------------------------
 #      # fixme: remove
-#      # checkout repo (automatically on develop)
-#      - uses: actions/checkout@v2
-#        with:
-#          path: repo  # Relative path under $GITHUB_WORKSPACE to place the repository
+      # checkout repo (automatically on develop)
+      - uses: actions/checkout@v2
+        with:
+          path: repo  # Relative path under $GITHUB_WORKSPACE to place the repository
 #
 #      # download build
 #      - run: cp -r repo/.github/workflows-resources/conda-build  conda-build
@@ -239,7 +239,8 @@ jobs:
           chmod +x ~/.local/bin/rclone
           cp rclone.1 ~/.local/share/man/man1/
           # dump conf
-          echo $CONDA_CHANNEL_RCLONE_CONF > ~/.rclone.conf
+          cp repo/.github/workflows-resources/rclone.conf ~/
+          #echo $CONDA_CHANNEL_RCLONE_CONF > ~/.rclone.conf
 
           # test
           rclone copy condachannel:static conda-build
