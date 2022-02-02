@@ -44,48 +44,48 @@ jobs:
         run: echo "::set-output name=VERSION::$(sed -n '0,/^##/s/## //p' RELEASE.md)"
         working-directory: ${{ github.workspace }}/repo
 
-      # prepare version.py
-      - run: echo 'version = "${{ steps.set-version.outputs.VERSION }}"\n' > ./${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
-        working-directory: ${{ github.workspace }}/repo
-
-      # add version
-      - run: git add ./${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
-        working-directory: ${{ github.workspace }}/repo
-
-      # commit to develop
-      # || : => works as try/except:pass (commit may fail in certain cases if code has not changed, \
-      #  but it shouldn't be a problem)
-      - run: |
-          set -e
-          git commit -m "[CI] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
-          git push origin develop
-        working-directory: ${{ github.workspace }}/repo
-
-      # install miniconda with conda-build
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          channels: conda-forge
-          conda-build-version: "*"
-          auto-activate-base: true
-          activate-environment: ""
-
-      # prepare build info
-      - run: |
-          set -e
-          mkdir conda-build
-          python .github/workflows-resources/create_meta.py conda-build ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
-        working-directory: ${{ github.workspace }}/repo
-
-      # build
-      - run: conda-build . --croot ${{ github.workspace }}/conda-build-to-upload
-        working-directory: ${{ github.workspace }}/repo/conda-build
-
-      # upload build
-      - uses: actions/upload-artifact@v2
-        with:
-          name: conda-build
-          path: ${{ github.workspace }}/conda-build-to-upload
-          retention-days: 1
+#      # prepare version.py
+#      - run: printf 'version = "${{ steps.set-version.outputs.VERSION }}"\n' > ./${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
+#        working-directory: ${{ github.workspace }}/repo
+#
+#      # add version
+#      - run: git add ./${{ steps.set-repository-name.outputs.REPOSITORY_NAME }}/version.py
+#        working-directory: ${{ github.workspace }}/repo
+#
+#      # commit to develop
+#      # || : => works as try/except:pass (commit may fail in certain cases if code has not changed, \
+#      #  but it shouldn't be a problem)
+#      - run: |
+#          set -e
+#          git commit -m "[CI] updated version as ${{ steps.set-version.outputs.VERSION }}" || :
+#          git push origin develop
+#        working-directory: ${{ github.workspace }}/repo
+#
+#      # install miniconda with conda-build
+#      - uses: conda-incubator/setup-miniconda@v2
+#        with:
+#          channels: conda-forge
+#          conda-build-version: "*"
+#          auto-activate-base: true
+#          activate-environment: ""
+#
+#      # prepare build info
+#      - run: |
+#          set -e
+#          mkdir conda-build
+#          python .github/workflows-resources/create_meta.py conda-build ${{ steps.set-repository-name.outputs.REPOSITORY_NAME }} false
+#        working-directory: ${{ github.workspace }}/repo
+#
+#      # build
+#      - run: conda-build . --croot ${{ github.workspace }}/conda-build-to-upload
+#        working-directory: ${{ github.workspace }}/repo/conda-build
+#
+#      # upload build
+#      - uses: actions/upload-artifact@v2
+#        with:
+#          name: conda-build
+#          path: ${{ github.workspace }}/conda-build-to-upload
+#          retention-days: 1
 
   test:
     runs-on: ubuntu-latest
@@ -102,41 +102,41 @@ jobs:
         with:
           path: repo  # Relative path under $GITHUB_WORKSPACE to place the repository
 
-      # configure git
-      - run: |
-          set -e
-          git config user.name Openergy Admin
-          git config user.email admin@openergy.fr
-        working-directory: ${{ github.workspace }}/repo
-
-      # download build
-      - uses: actions/download-artifact@v2
-        with:
-          name: conda-build
-          path: ${{ github.workspace }}/conda-build
-
-      # prepare miniconda cache
-      - uses: actions/cache@v2
-        with:
-          path: ~/conda_pkgs_dir
-          key: ${{ runner.os }}-${{ hashFiles('${{ github.workspace }}/conda-build/**') }}
-
-      # install miniconda
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          mamba-version: "*"
-          channels: defaults,conda-forge
-
-      # install package
-      - run: mamba install -q -c ${{ github.workspace }}/conda-build ${{ needs.build.outputs.REPOSITORY_NAME }}=${{ needs.build.outputs.VERSION }}
-
-      # install tests packages
-      - run: mamba install pytest pytest-cov
-
-      # copy and run tests
-      - run: cp -r ${{ github.workspace }}/repo/tests ${{ github.workspace }}
-      # fixme: manage coverage
-      - run: pytest tests
+#      # configure git
+#      - run: |
+#          set -e
+#          git config user.name Openergy Admin
+#          git config user.email admin@openergy.fr
+#        working-directory: ${{ github.workspace }}/repo
+#
+#      # download build
+#      - uses: actions/download-artifact@v2
+#        with:
+#          name: conda-build
+#          path: ${{ github.workspace }}/conda-build
+#
+#      # prepare miniconda cache
+#      - uses: actions/cache@v2
+#        with:
+#          path: ~/conda_pkgs_dir
+#          key: ${{ runner.os }}-${{ hashFiles('${{ github.workspace }}/conda-build/**') }}
+#
+#      # install miniconda
+#      - uses: conda-incubator/setup-miniconda@v2
+#        with:
+#          mamba-version: "*"
+#          channels: defaults,conda-forge
+#
+#      # install package
+#      - run: mamba install -q -c ${{ github.workspace }}/conda-build ${{ needs.build.outputs.REPOSITORY_NAME }}=${{ needs.build.outputs.VERSION }}
+#
+#      # install tests packages
+#      - run: mamba install pytest pytest-cov
+#
+#      # copy and run tests
+#      - run: cp -r ${{ github.workspace }}/repo/tests ${{ github.workspace }}
+#      # fixme: manage coverage
+#      - run: pytest tests
 
   version:
     needs: [build, test]
@@ -155,41 +155,41 @@ jobs:
           path: repo  # Relative path under $GITHUB_WORKSPACE to place the repository
           fetch-depth: 0  # must fetch all or merges will fail
 
-      # configure git
-      - run: |
-          set -e
-          git config user.name Openergy Admin
-          git config user.email admin@openergy.fr
-        working-directory: ${{ github.workspace }}/repo
-
-      # checkout master and merge develop
-      - run: |
-          set -e
-
-          # checkout master, merge develop, push master
-          git checkout master
-          git merge --ff-only develop
-          git push origin master
-
-          # create version
-          git tag ${{ needs.build.outputs.VERSION }}
-
-          # checkout develop and merge master
-          git checkout develop
-          git pull
-          git merge master
-
-          # add the next version
-          sed -i "0,/^##/s/##/## next\\n\\n##/" RELEASE.md
-
-          # commit and push develop
-          git commit RELEASE.md -m "[CI] added ## next to RELEASE.md"
-
-          # push develop and tag
-          git push origin develop
-          echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
-          git push origin ${{ needs.build.outputs.VERSION }}
-        working-directory: ${{ github.workspace }}/repo
+#      # configure git
+#      - run: |
+#          set -e
+#          git config user.name Openergy Admin
+#          git config user.email admin@openergy.fr
+#        working-directory: ${{ github.workspace }}/repo
+#
+#      # checkout master and merge develop
+#      - run: |
+#          set -e
+#
+#          # checkout master, merge develop, push master
+#          git checkout master
+#          git merge --ff-only develop
+#          git push origin master
+#
+#          # create version
+#          git tag ${{ needs.build.outputs.VERSION }}
+#
+#          # checkout develop and merge master
+#          git checkout develop
+#          git pull
+#          git merge master
+#
+#          # add the next version
+#          sed -i "0,/^##/s/##/## next\\n\\n##/" RELEASE.md
+#
+#          # commit and push develop
+#          git commit RELEASE.md -m "[CI] added ## next to RELEASE.md"
+#
+#          # push develop and tag
+#          git push origin develop
+#          echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
+#          git push origin ${{ needs.build.outputs.VERSION }}
+#        working-directory: ${{ github.workspace }}/repo
 
 
   conda-upload:
@@ -199,6 +199,23 @@ jobs:
       run:
         working-directory: $ {{ github.workspace }}
     steps:
+      # -------------------------
+      # fixme: remove
+      # checkout repo (automatically on develop)
+      - uses: actions/checkout@v2
+        with:
+          path: repo  # Relative path under $GITHUB_WORKSPACE to place the repository
+
+      # download build
+      - run: cp ${{ github.workspace }}/repo/.github/workflows-resources/conda_build  ${{ github.workspace }}/conda_build
+      # -------------------------
+
+#      # download build
+#      - uses: actions/download-artifact@v2
+#        with:
+#          name: conda-build
+#          path: ${{ github.workspace }}/conda-build
+
       # install rclone and write config
       - run: |
           set -e
@@ -216,12 +233,6 @@ jobs:
           conda-build-version: "*"
           auto-activate-base: true
           activate-environment: ""
-
-      # download build
-      - uses: actions/download-artifact@v2
-        with:
-          name: conda-build
-          path: ${{ github.workspace }}/conda-build
 
       # download packages, update index and upload to channel
       - run: |
