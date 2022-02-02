@@ -207,7 +207,7 @@ jobs:
           path: repo  # Relative path under $GITHUB_WORKSPACE to place the repository
 
       # download build
-      - run: cp ${{ github.workspace }}/repo/.github/workflows-resources/conda-build  ${{ github.workspace }}
+      - run: cp -r ${{ github.workspace }}/repo/.github/workflows-resources/conda-build  ${{ github.workspace }}/conda-build
       # -------------------------
 
 #      # download build
