@@ -171,7 +171,7 @@ jobs:
           git checkout master
 
           # merge develop
-          git merge --ff-only develop || ( echo \'ERROR: please merge your branch with the current version of master before versioning\' && exit 1 )
+          git merge develop
 
           # create version
           echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
