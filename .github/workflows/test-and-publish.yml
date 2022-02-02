@@ -166,17 +166,13 @@ jobs:
       - run: |
           set -e
 
-          # checkout master and merge develop
+          # checkout master, merge develop, push master
           git checkout master
           git merge --ff-only develop
+          git push origin master
 
           # create version
-          echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
           git tag ${{ needs.build.outputs.VERSION }}
-
-          # push
-          git push origin master
-          git push origin ${{ needs.build.outputs.VERSION }}
 
           # checkout develop and merge master
           git checkout develop
@@ -187,7 +183,11 @@ jobs:
 
           # commit and push develop
           git commit RELEASE.md -m "[CI] added ## next to RELEASE.md"
+
+          # push develop and tag
           git push origin develop
+          echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
+          git push origin ${{ needs.build.outputs.VERSION }}
         working-directory: ${{ github.workspace }}/repo
 
 

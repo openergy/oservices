@@ -2,6 +2,9 @@
 
 *(M): major, (m): minor, (p): patch*
 
+## 0.0.4
+* p: devops debug
+
 ## 0.0.3
 * p: devops debug
 
