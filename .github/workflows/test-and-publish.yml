@@ -199,7 +199,6 @@ jobs:
       run:
         working-directory: ${{ github.workspace }}
     steps:
-      - run: echo ${{ secrets.CONDA_CHANNEL_RCLONE_CONF }} | sed 's/./& /g'
 #      # -------------------------
 #      # fixme: remove
 #      # checkout repo (automatically on develop)
@@ -218,38 +217,39 @@ jobs:
 ##          path: ${{ github.workspace }}/conda-build
 #
       # install rclone and write config
-#      - run: |
-#          set -e
-#
-#          # https://rclone.org/install/
-#          wget -q https://downloads.rclone.org/rclone-current-linux-amd64.zip
-#          unzip rclone-current-linux-amd64.zip
-#          cd rclone-*-linux-amd64
-#
-#          # https://askubuntu.com/questions/1357549/how-to-install-rclone-in-ubuntu-without-root
-#
-#          # prepare local installation directories
-#          mkdir ~/.local
-#          mkdir ~/.local/bin
-#          mkdir ~/.local/share
-#          mkdir ~/.local/share/man
-#          mkdir ~/.local/share/man/man1
-#
-#          # copy rclone files
-#          cp rclone ~/.local/bin
-#          chmod +x ~/.local/bin/rclone
-#          cp rclone.1 ~/.local/share/man/man1/
-#
-#          # dump conf
-#          cd ..
-#          ls -R repo
-#          cp repo/.github/workflows-resources/rclone.conf ~/.rclone.conf
-#          #echo $CONDA_CHANNEL_RCLONE_CONF > ~/.rclone.conf
-#
-#          # test
-#          rclone copy condachannel:static conda-build
-#        env:
-#          CONDA_CHANNEL_RCLONE_CONF: ${{ secrets.CONDA_CHANNEL_RCLONE_CONF }}
+      - run: |
+          set -e
+
+          # https://rclone.org/install/
+          wget -q https://downloads.rclone.org/rclone-current-linux-amd64.zip
+          unzip rclone-current-linux-amd64.zip
+          cd rclone-*-linux-amd64
+
+          # https://askubuntu.com/questions/1357549/how-to-install-rclone-in-ubuntu-without-root
+
+          # prepare local installation directories
+          mkdir ~/.local
+          mkdir ~/.local/bin
+          mkdir ~/.local/share
+          mkdir ~/.local/share/man
+          mkdir ~/.local/share/man/man1
+
+          # copy rclone files
+          cp rclone ~/.local/bin
+          chmod +x ~/.local/bin/rclone
+          cp rclone.1 ~/.local/share/man/man1/
+
+          # create conf
+          cat > ~/.rclone.conf <<EOL
+          [condachannel]
+          type = azureblob
+          account = condachannel
+          key = ${{ secrets.AZURE_CONDA_CHANNEL_KEY }}
+
+          EOL
+
+          # test
+          rclone copy condachannel:static conda-build
 #
 #      # install miniconda with conda-build
 #      - uses: conda-incubator/setup-miniconda@v2
