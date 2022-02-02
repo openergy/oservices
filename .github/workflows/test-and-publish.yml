@@ -153,6 +153,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           path: repo  # Relative path under $GITHUB_WORKSPACE to place the repository
+          fetch-depth: 0  # must fetch all or merges will fail
 
       # configure git
       - run: |
@@ -165,12 +166,9 @@ jobs:
       - run: |
           set -e
 
-          # checkout master
-          git fetch origin master  # by default, actions/checkout@v2 fetch-depth is 1, so origin/master is invisible
+          # checkout master and merge develop
           git checkout master
-
-          # merge develop
-          git merge --allow-unrelated-histories develop
+          git merge --ff-only develop
 
           # create version
           echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
