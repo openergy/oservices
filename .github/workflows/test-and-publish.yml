@@ -176,6 +176,7 @@ jobs:
 
           # checkout develop and merge master
           git checkout develop
+          git pull
           git merge master
 
           # add the next version
