@@ -14,7 +14,7 @@ setup(
     packages=find_packages(exclude="tests"),
     author="Openergy team",
     author_email="contact@openergy.fr",
-    long_description=open('README.md').read(),
+    long_description=open("README.md").read(),
     install_requires=requirements,
     url="https://github.com/openergy/oservices",
     classifiers=[
