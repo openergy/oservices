@@ -2,7 +2,7 @@ name: test-and-publish
 on:
   push:
     branches:
-      - 'develop'
+      - develop
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -219,9 +219,16 @@ jobs:
       # install rclone and write config
       - run: |
           set -e
-          wget https://rclone.org/install.sh
-          chmod +x install.sh
-          ./install.sh
+
+          # https://rclone.org/install/
+          wget https://downloads.rclone.org/rclone-current-linux-amd64.zip
+          unzip rclone-current-linux-amd64.zip
+          cd rclone-*-linux-amd64
+          # https://askubuntu.com/questions/1357549/how-to-install-rclone-in-ubuntu-without-root
+          cp rclone ~/.local/bin
+          chmod +x ~/.local/bin/rclone
+          cp rclone.1 ~/.local/share/man/man1/
+          # dump conf
           echo $CONDA_CHANNEL_RCLONE_CONF > ~/.rclone.conf
         env:
           CONDA_CHANNEL_RCLONE_CONF: ${{ secrets.CONDA_CHANNEL_RCLONE_CONF }}
