@@ -166,7 +166,7 @@ jobs:
       # version and push master
       - run: |
           echo "Versioning to version ${{ needs.build.outputs.VERSION }}"
-          git tag ${{ needs.build.outputs.VERSION }}"
+          git tag ${{ needs.build.outputs.VERSION }}
           git push origin master
           git push origin ${{ needs.build.outputs.VERSION }}
         working-directory: ${{ github.workspace }}/repo
@@ -200,5 +200,7 @@ jobs:
           wget https://rclone.org/install.sh
           chmod +x install.sh
           ./install.sh
-#      - run:
-#          env: CONDA_CHANNEL_RCLONE_CONF: {{ $ }}
+          echo $CONDA_CHANNEL_RCLONE_CONF > ~/.rclone.conf
+        env:
+          CONDA_CHANNEL_RCLONE_CONF: ${{ secrets.CONDA_CHANNEL_RCLONE_CONF }}
+
