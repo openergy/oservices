@@ -136,7 +136,7 @@ jobs:
       - run: pytest tests
 
   version:
-    needs: test
+    needs: [build, test]
     if: needs.build.outputs.VERSION != 'next'
     runs-on: ubuntu-latest
     defaults:
@@ -182,7 +182,7 @@ jobs:
         working-directory: ${{ github.workspace }}/repo
 
   conda-upload:
-    needs: version  # we want to make sure that versioning worked before uploading to conda channel
+    needs: [build, test, version]  # we want to make sure that versioning worked before uploading to conda channel
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -195,8 +195,10 @@ jobs:
           path: ${{ github.workspace }}/conda-build
       - run: ls -R
 
-      # install rclone
+      # install rclone and write config
       - run: |
           wget https://rclone.org/install.sh
           chmod +x install.sh
           ./install.sh
+#      - run:
+#          env: CONDA_CHANNEL_RCLONE_CONF: {{ $ }}
