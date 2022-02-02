@@ -222,7 +222,7 @@ jobs:
 
           # https://rclone.org/install/
           wget https://downloads.rclone.org/rclone-current-linux-amd64.zip
-          unzip rclone-current-linux-amd64.zip
+          unzip -q rclone-current-linux-amd64.zip
           cd rclone-*-linux-amd64
 
           # https://askubuntu.com/questions/1357549/how-to-install-rclone-in-ubuntu-without-root
@@ -239,7 +239,8 @@ jobs:
           chmod +x ~/.local/bin/rclone
           cp rclone.1 ~/.local/share/man/man1/
           # dump conf
-          cp repo/.github/workflows-resources/rclone.conf ~/
+          ls -R repo
+          cp repo/.github/workflows-resources/rclone.conf ~/.rclone.conf
           #echo $CONDA_CHANNEL_RCLONE_CONF > ~/.rclone.conf
 
           # test
