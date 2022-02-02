@@ -88,5 +88,3 @@ if __name__ == "__main__":
     # write to target
     with open(os.path.join(target_dir_path, "meta.yaml"), "w") as f:
         f.write(meta)
-
-    print(meta)
