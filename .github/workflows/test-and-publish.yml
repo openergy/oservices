@@ -5,4 +5,4 @@ on:
       - develop
 jobs:
   build-test-version-upload:
-    uses: openergy/github-actions-workflow/.github/workflows/test-and-publish-package.yml@master
+    uses: openergy/github-actions-workflows/.github/workflows/test-and-publish-package.yml@master
