@@ -91,14 +91,14 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: conda-build
-          path: ${HOME}
-      - run: cd ${HOME} && ls
+          path: ~
+      - run: cd ~ && ls -R
 
       # prepare miniconda cache
       - uses: actions/cache@v2
         with:
           path: ~/conda_pkgs_dir
-          key: ${{ runner.os }}-${{ hashFiles('${HOME}/conda-build/**') }}
+          key: ${{ runner.os }}-${{ hashFiles('~/conda-build/**') }}
 
       # install miniconda
       - uses: conda-incubator/setup-miniconda@v2
@@ -107,13 +107,13 @@ jobs:
           channels: defaults,conda-forge
 
       # install package
-      - run: mamba install -q -c ${HOME}/conda-build ${{ needs.build.outputs.REPOSITORY_NAME }}=${{ needs.build.outputs.VERSION }}
+      - run: mamba install -q -c ~/conda-build ${{ needs.build.outputs.REPOSITORY_NAME }}=${{ needs.build.outputs.VERSION }}
 
       # install tests packages, prepare and run tests
       - run: mamba install pytest pytest-cov
-      - run: cp -r ${{ github.workspace }}/tests ${HOME}/tests
+      - run: cp -r ${{ github.workspace }}/tests ~/tests
       # fixme: manage coverage
-      - run: cd ${HOME} && pytest tests
+      - run: cd ~ && pytest tests
 
   version:
     needs: test
@@ -151,4 +151,18 @@ jobs:
           sed -i "0,/^##/s/##/## next\\n\\n##/" RELEASE.md
           git commit RELEASE.md -m "[CI] added ## next to RELEASE.md"
           git push origin develop
+
+  conda-upload:
+    needs: version  # we want to make sure that versioning worked before uploading to conda channel
+    runs-on: ubuntu-latest
+    steps:
+      # download build
+      - uses: actions/download-artifact@v2
+        with:
+          name: conda-build
+          path: ~
+      - run: cd ~ && ls
+
+      # install rclone
+      - run: wget https://rclone.org/install.sh | bash
 
