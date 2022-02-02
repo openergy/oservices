@@ -3,7 +3,7 @@
     "subdir": "noarch"
   },
   "packages": {
-    "oservices-next-py_0.tar.bz2": {
+    "oservices-0.0.4-py_0.tar.bz2": {
       "build": "py_0",
       "build_number": 0,
       "depends": [
@@ -12,14 +12,14 @@
         "psutil >=5,<6",
         "python >=3.6,<4.0"
       ],
-      "md5": "f92a45f7335e3238579a21a5941ba1c5",
+      "md5": "ec9c975a81d3056df44c53ea108bb965",
       "name": "oservices",
       "noarch": "python",
-      "sha256": "e19937d40d0206408ca9b35be40d786bd5369b8ce147a0c59f68468a83eec698",
-      "size": 19912,
+      "sha256": "73e801e9dc7ad8c3e5103d120fe8f42e259a2836f935b6833e057db91974ec1e",
+      "size": 19927,
       "subdir": "noarch",
-      "timestamp": 1643733387024,
-      "version": "next"
+      "timestamp": 1643811794014,
+      "version": "0.0.4"
     }
   },
   "packages.conda": {},
