@@ -34,7 +34,7 @@ RESERVED_ATTRS = (
 )
 
 
-class TextFormatter(logging.Formatter):
+class LoggingTextFormatter(logging.Formatter):
     def format(self, record):
         """Formats a log record and serializes to json"""
         record.message = record.getMessage()
