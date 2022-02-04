@@ -2,6 +2,8 @@
 
 *(M): major, (m): minor, (p): patch*
 
+## next
+
 ## 1.1.0
 * m: util public interface was added
 
