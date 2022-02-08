@@ -2,6 +2,8 @@
 
 *(M): major, (m): minor, (p): patch*
 
+## next
+
 ## 3.0.0
 * M: asyncio functions were added to api
 
