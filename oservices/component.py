@@ -7,7 +7,7 @@ import json
 import tempfile
 import sys
 
-from .snippets.processes import GracefulProcess, register_exit
+from .processes import GracefulProcess, register_exit
 from .snippets.streams_and_subprocesses import run_subprocess
 from .snippets.load_var import load_var
 from .configuration_management import ConfigurationManager

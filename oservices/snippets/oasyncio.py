@@ -88,15 +88,6 @@ async def traceback_coro(coro):
         raise e.__class__(traceback.format_exc()) from None
 
 
-class ProcessExit(SystemExit):
-    code = 1
-
-
-def raise_exit():
-    _logger.warning("SIGINT or SIGTERM received")
-    raise ProcessExit()
-
-
 class SyncWrapper:
     def __init__(self, async_object):
         self._async_object = async_object

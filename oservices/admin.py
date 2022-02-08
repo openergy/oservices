@@ -4,7 +4,7 @@ import sys
 
 
 from .settings import SettingsManager, SettingsField
-from .snippets.processes import register_exit
+from .processes import register_exit
 # fixme: see if backup is still relevant (if not, remove). See work/backup.
 # from .backup import restore
 

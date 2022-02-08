@@ -5,7 +5,8 @@ from asyncio.coroutines import CoroWrapper
 
 from oservices import CONF
 
-from .snippets.oasyncio import raise_exit, ProcessExit, traceback_coro, traceback_partial
+from .processes import raise_exit, ProcessExit
+from .snippets.oasyncio import traceback_coro, traceback_partial
 
 
 logger = logging.getLogger(__name__)

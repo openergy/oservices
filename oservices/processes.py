@@ -162,6 +162,15 @@ def register_exit(is_main_process=True):
         signal.signal(signal.SIGTERM, _default_exit)
 
 
+class ProcessExit(SystemExit):
+    code = 1
+
+
+def raise_exit():
+    _logger.warning("SIGINT or SIGTERM received")
+    raise ProcessExit()
+
+
 # prepare context: we force spawn method on linux
 _ctx = mp.get_context("spawn")
 
