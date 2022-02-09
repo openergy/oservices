@@ -2,7 +2,8 @@
 
 *(M): major, (m): minor, (p): patch*
 
-## next
+## 3.1.0
+* m: process functions added to api
 
 ## 3.0.0
 * M: asyncio functions were added to api
