@@ -2,7 +2,8 @@
 
 *(M): major, (m): minor, (p): patch*
 
-## next
+## 3.1.1
+* p: asyncio_max_processes and threads was re-connected
 
 ## 3.1.0
 * m: process functions added to api
